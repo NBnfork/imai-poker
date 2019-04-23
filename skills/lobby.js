@@ -48,23 +48,19 @@ module.exports = function(controller) {
                                 user = {};
                                 user.id = message.user;
                                 user.tasks = [];
+                                user.currentLobby =0;
                             }           
 
+                            // update the db for this user at this current status, creates a "currentLobby" field
+                            controller.storage.users.save(user, function(err,saved) {
+                                if (err) {
+                                    bot.reply(message, 'I experienced an error in saving user to db: ' + err);
+                                } else {
+                                    // do nothing
+                                }
 
+                            });
 
-                            // If the "currentLobby" attribute isn't in yet
-                            if (!user.currentLobby){
-                                user.currentLobby = 0;
-                                // update the db for this user at this current status, creates a "currentLobby" field
-                                controller.storage.users.save(user, function(err,saved) {                                        
-                                    if (err) {
-                                        bot.reply(message, 'I experienced an error in saving user to db: ' + err);
-                                    } else {
-                                        // do nothing 
-                                    }
-
-                                });
-                            } 
                             
                             /* ------------------------------------------------------------------------------------------------------------------
                                 
@@ -102,7 +98,7 @@ module.exports = function(controller) {
                                         controller.storage.users.save(user, function(err,saved) {
 
                                             if (err) {
-                                                bot.reply(message, 'I experienced an error adding your task: ' + err);
+                                                bot.reply(message, 'I experienced an error saving the user: ' + err);
                                             } else {
                                                 // This is a callback to user save, which is inside the callback of lobby save. Report.
                                                 var text = 'Certainly, <@' + message.user + '>! You\'re in a lobby now.\n';
